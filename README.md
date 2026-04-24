@@ -430,6 +430,87 @@ Both must be set for guardrails to activate. The system will still function with
 
 ---
 
+## Cleanup
+
+To avoid ongoing charges, delete the resources created by this project when you're done.
+
+### 1. Delete the AgentCore Runtime
+
+```bash
+# Get your runtime ID from the ARN (the last segment after "runtime/")
+aws bedrock-agentcore-control delete-agent-runtime \
+  --agent-runtime-id <runtime-id> \
+  --region us-east-1
+```
+
+### 2. Delete the ECR Repository
+
+AgentCore creates an ECR repository to store the container image.
+
+```bash
+aws ecr delete-repository \
+  --repository-name <repository-name> \
+  --force \
+  --region us-east-1
+```
+
+### 3. Delete the Bedrock Guardrail (if created)
+
+```bash
+aws bedrock delete-guardrail \
+  --guardrail-identifier <guardrail-id> \
+  --region us-east-1
+```
+
+### 4. Delete VPC Resources (if created)
+
+If you deployed the optional security hardening scripts (`security/T07-*`, `security/T08-*`), remove those resources:
+
+```bash
+# DNS Firewall (T08) — disassociate, then delete rules, rule group, and domain lists
+aws route53resolver disassociate-firewall-rule-group \
+  --firewall-rule-group-association-id <association-id> \
+  --region us-east-1
+
+aws route53resolver delete-firewall-rule \
+  --firewall-rule-group-id <rule-group-id> \
+  --firewall-domain-list-id <allowlist-id>
+
+aws route53resolver delete-firewall-rule \
+  --firewall-rule-group-id <rule-group-id> \
+  --firewall-domain-list-id <blocklist-id>
+
+aws route53resolver delete-firewall-rule-group \
+  --firewall-rule-group-id <rule-group-id>
+
+aws route53resolver delete-firewall-domain-list \
+  --firewall-domain-list-id <allowlist-id>
+
+aws route53resolver delete-firewall-domain-list \
+  --firewall-domain-list-id <blocklist-id>
+
+# VPC Endpoints (T07)
+aws ec2 delete-vpc-endpoints \
+  --vpc-endpoint-ids <endpoint-id-1> <endpoint-id-2> ... \
+  --region us-east-1
+
+# Security Group egress rules are removed when the security group is deleted
+# (only delete if you created a dedicated SG for this project)
+```
+
+### 5. Delete IAM Roles and Policies (if created)
+
+Remove any IAM roles and policies you created specifically for this project (task role, caller role, resource policies).
+
+```bash
+# Detach policies from roles first, then delete
+aws iam detach-role-policy --role-name <role-name> --policy-arn <policy-arn>
+aws iam delete-policy --policy-arn <policy-arn>
+aws iam delete-role --role-name <role-name>
+```
+
+---
+
 ## Troubleshooting
 
 **OpenTelemetry connection errors locally**: Set these env vars before running:

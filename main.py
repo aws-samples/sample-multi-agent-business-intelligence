@@ -168,9 +168,9 @@ def _validate_agent_output(output: str, agent_name: str, max_length: int = 20000
 
 # --- Models (BDR4: Bedrock Guardrails applied to all models) ---
 _guardrails = _guardrail_config()
-RESEARCH_MODEL = BedrockModel(model_id="us.anthropic.claude-3-haiku-20240307-v1:0", temperature=0.2, **_guardrails)
-SYNTHESIS_MODEL = BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514-v1:0", temperature=0.3, **_guardrails)
-CREATIVE_MODEL = BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514-v1:0", temperature=0.7, **_guardrails)
+RESEARCH_MODEL = BedrockModel(model_id="us.anthropic.claude-haiku-4-5-20251001-v1:0", temperature=0.2, **_guardrails)
+SYNTHESIS_MODEL = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6", temperature=0.3, **_guardrails)
+CREATIVE_MODEL = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6", temperature=0.7, **_guardrails)
 
 
 # --- Agent 1: Financial Research ---

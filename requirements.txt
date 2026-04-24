@@ -1,7 +1,7 @@
 # Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms.
 
-strands-agents==0.5.0
-strands-agents-tools==0.3.0
-boto3==1.40.20
-bedrock-agentcore==0.2.0
-requests==2.32.5
+strands-agents>=1.0.0,<2.0.0
+strands-agents-tools>=0.1.0,<2.0.0
+boto3>=1.35.0
+bedrock-agentcore>=1.0.0,<2.0.0
+requests>=2.31.0
